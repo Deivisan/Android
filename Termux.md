@@ -68,7 +68,8 @@ adb shell ping -c 1 8.8.8.8
 
 ### 📱 **Informações de Conexão**
 - **Device ID ADB:** 72e24d130223
-- **IP Atual (fixo neste PC):** 172.17.9.9
+- **IP Atual:** 192.168.25.2 (rede atual)
+- **Nome do PC:** DeiviPC
 - **Porta SSH:** 8022
 - **Usuário SSH:** u0_a620
 - **Método de Autenticação:** Chave SSH (sem senha)
@@ -301,7 +302,7 @@ function extract() {
 #!/bin/bash
 # auto_connect.sh - Conecta automaticamente ao Termux
 
-IP="172.17.9.9"
+IP="192.168.25.2"
 PORT="8022"
 USER="u0_a620"
 KEY="$HOME/.ssh/id_ed25519_termux"
@@ -328,7 +329,7 @@ ssh -i "$KEY" -p "$PORT" "$USER@$IP"
 #!/bin/bash
 # sync_files.sh - Sincroniza arquivos entre PC e Termux
 
-TERMUX_IP="172.17.9.9"
+TERMUX_IP="192.168.25.2"
 TERMUX_USER="u0_a620"
 TERMUX_PATH="/data/data/com.termux/files/home"
 LOCAL_PATH="./termux_backup"
@@ -394,7 +395,7 @@ ollama run "$MODEL" "$PROMPT"
 ### 🔗 **Conexão Básica**
 ```bash
 # Via SSH com chave
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2
 
 # Via ADB shell (limitado)
 adb shell
@@ -406,10 +407,10 @@ adb shell su
 ### 📤 **Transferência de Arquivos**
 ```bash
 # Do PC para Termux
-scp -P 8022 -i ~/.ssh/id_ed25519_termux arquivo.txt u0_a620@172.17.9.9:~
+scp -P 8022 -i ~/.ssh/id_ed25519_termux arquivo.txt u0_a620@192.168.25.2:~
 
 # Do Termux para PC
-scp -P 8022 -i ~/.ssh/id_ed25519_termux u0_a620@172.17.9.9:~/arquivo.txt .
+scp -P 8022 -i ~/.ssh/id_ed25519_termux u0_a620@192.168.25.2:~/arquivo.txt .
 
 # Via ADB
 adb push arquivo.txt /sdcard/
@@ -419,13 +420,13 @@ adb pull /sdcard/arquivo.txt .
 ### 🚀 **Execução Remota**
 ```bash
 # Executar comando remoto
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9 "ls -la"
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "ls -la"
 
 # Executar script remoto
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9 "bash script.sh"
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "bash script.sh"
 
 # Entrar no Arch Linux via PRoot
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9 "proot-distro login archlinux"
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "proot-distro login archlinux"
 ```
 
 ---
@@ -484,7 +485,7 @@ fi
 ```json
 {
   "device_id": "72e24d130223",
-  "current_ip": "172.17.9.9",
+  "current_ip": "192.168.25.2",
   "ssh_port": 8022,
   "ssh_user": "u0_a620",
   "root_available": true,
@@ -493,6 +494,7 @@ fi
   "archlinux_packages": 371,
   "ai_frameworks": ["pytorch", "transformers", "ollama"],
   "last_updated": "2025-10-08",
+  "pc_name": "DeiviPC",
   "connection_status": "active"
 }
 ```
