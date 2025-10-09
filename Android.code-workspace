@@ -5,13 +5,6 @@
     }
   ],
   "settings": {
-    "terminal.integrated.env.linux": {
-      "ANDROID_HOME": "/data/data/com.termux/files/home/android-sdk",
-      "JAVA_HOME": "/data/data/com.termux/files/home/jdk",
-      "TERMUX_PREFIX": "/data/data/com.termux/files/usr"
-    },
-    "python.defaultInterpreterPath": "/data/data/com.termux/files/usr/bin/python",
-    "node.path": "/data/data/com.termux/files/usr/bin/node",
     "kiloCode.modes": ["code", "architect", "debug", "orchestrator"],
     "windsurf.memorySync": true,
     "mcp.enabled": true,
@@ -20,27 +13,33 @@
       "*.md": "markdown",
       "*.py": "python",
       "*.js": "javascript",
-      "*.java": "java"
+      "*.java": "java",
+      "*.gradle": "gradle",
+      "*.xml": "xml"
     },
     "git.autofetch": true,
-    "terminal.integrated.shell.linux": "/data/data/com.termux/files/usr/bin/zsh"
+    "terminal.integrated.shell.linux": "/usr/bin/zsh",
+    "terminal.integrated.env.linux": {
+      "PATH": "${env:PATH}"
+    }
   },
   "extensions": {
     "recommendations": [
       "ms-vscode.vscode-android",
-      "ms-vscode-remote.remote-ssh",
       "ms-python.python",
       "ms-vscode.vscode-node-debug2",
       "ms-vscode.vscode-git-graph",
       "ms-vscode.vscode-json",
-      "ms-vscode.vscode-yaml"
+      "ms-vscode.vscode-yaml",
+      "redhat.java",
+      "vscjava.vscode-gradle"
     ]
   },
   "tasks": {
     "version": "2.0.0",
     "tasks": [
       {
-        "label": "Build APK",
+        "label": "Build APK (Local)",
         "type": "shell",
         "command": "./gradlew assembleDebug",
         "group": {
@@ -59,11 +58,10 @@
         }
       },
       {
-        "label": "Deploy to Termux",
+        "label": "Clean Build",
         "type": "shell",
-        "command": "adb install -r app/build/outputs/apk/debug/app-debug.apk",
+        "command": "./gradlew clean",
         "group": "build",
-        "dependsOn": ["Build APK"],
         "presentation": {
           "echo": true,
           "reveal": "always",
@@ -77,7 +75,7 @@
       {
         "label": "Run Python Script",
         "type": "shell",
-        "command": "python ${file}",
+        "command": "python3 ${file}",
         "group": "test",
         "presentation": {
           "echo": true,
@@ -103,6 +101,22 @@
         "options": {
           "cwd": "${workspaceFolder}"
         }
+      },
+      {
+        "label": "Deploy APK (ADB)",
+        "type": "shell",
+        "command": "adb install -r app/build/outputs/apk/debug/app-debug.apk",
+        "group": "build",
+        "dependsOn": ["Build APK (Local)"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
       }
     ]
   },
@@ -114,28 +128,23 @@
         "type": "python",
         "request": "launch",
         "program": "${file}",
-        "console": "integratedTerminal",
-        "python": "/data/data/com.termux/files/usr/bin/python"
+        "console": "integratedTerminal"
       },
       {
         "name": "Debug Node.js",
         "type": "node",
         "request": "launch",
         "program": "${file}",
-        "skipFiles": ["<node_internals>/**"],
-        "runtimeExecutable": "/data/data/com.termux/files/usr/bin/node"
+        "skipFiles": ["<node_internals>/**"]
       },
       {
-        "name": "Debug Android",
+        "name": "Debug Android App",
         "type": "android",
         "request": "launch",
-        "preLaunchTask": "Build APK",
+        "preLaunchTask": "Build APK (Local)",
         "appSrcRoot": "${workspaceFolder}/app/src/main",
-        "apkFile": "${workspaceFolder}/app/build/outputs/apk/debug/app-debug.apk",
-        "adbPort": 5037,
-        "targetDevice": "emulator-5554"
+        "apkFile": "${workspaceFolder}/app/build/outputs/apk/debug/app-debug.apk"
       }
     ]
-  },
-  "remoteAuthority": "ssh-remote+termux"
+  }
 }
