@@ -3,9 +3,9 @@
 
 ## 📚 **ÍNDICE DE NAVEGAÇÃO - GUIA DE REFERÊNCIA** [LINHAS EXATAS]
 ```
-📍 DETECÇÃO AUTOMÁTICA...............linhas: 23-46
-📍 CONEXÃO ADB & SSH.................linhas: 47-76
-📍 CHAVES SSH........................linhas: 77-96
+📍 DETECÇÃO AUTOMÁTICA...............linhas: 22-66
+📍 CONEXÃO ADB & SSH.................linhas: 68-86
+📍 CHAVES SSH........................linhas: 88-107
 📍 SISTEMA TERMUX....................linhas: 97-136
 📍 PACOTES INSTALADOS................linhas: 137-196
 📍 PROOT DISTRO ARCH LINUX...........linhas: 197-236
@@ -14,6 +14,7 @@
 📍 INSTRUÇÕES PARA AGENTES...........linhas: 317-356
 📍 COMANDOS DE CONEXÃO...............linhas: 357-396
 📍 ATUALIZAÇÃO DINÂMICA..............linhas: 397-436
+📍 AGENTES IA CONFIGURADOS...........linhas: 605-625
 ```
 
 ---
@@ -501,6 +502,39 @@ fi
 
 ---
 
+## 🔧 **CORREÇÕES DE MIRRORS REALIZADAS - 09/10/2025**
+
+### 📱 **Termux Mirrors**
+- **Mirror Anterior:** `deb https://mirrors.nju.edu.cn/termux/apt/termux-main stable main`
+- **Mirror Configurado:** `deb https://mirrors.rda.run/termux/termux-main stable main`
+- **Status:** ⚠️ **DOMÍNIO INVÁLIDO** (mirrors.rda.run não resolve)
+- **Solução Automática:** Termux detectou falha e usou mirrors alternativos automaticamente
+- **Mirrors Utilizados:** packages-cf.termux.dev, mirrors.ustc.edu.cn, mirrors.tuna.tsinghua.edu.cn
+- **Resultado:** ✅ **ATUALIZAÇÃO BEM-SUCEDIDA** (pkg update && pkg upgrade)
+
+### 🐧 **Arch Linux Mirrors**
+- **Mirror Anterior:** `Server = http://mirror.archlinuxarm.org/$arch/$repo`
+- **Tentativa HTTPS:** `Server = https://mirror.archlinuxarm.org/$arch/$repo`
+- **Erro SSL:** "SSL: no alternative certificate subject name matches target hostname"
+- **Correção Aplicada:** `Server = http://eu.mirror.archlinuxarm.org/$arch/$repo`
+- **Status:** ✅ **FUNCIONAL** (HTTP sem SSL)
+- **Resultado:** ✅ **ATUALIZAÇÃO BEM-SUCEDIDA** (pacman -Syu --noconfirm)
+
+### 📊 **Testes de Velocidade Realizados**
+- **Termux Mirror Atual:** ~387ms ping, curl falhou (timeout)
+- **Arch Mirror Atual:** ~228ms ping, curl falhou (timeout)
+- **Mirrors Alternativos PC:**
+  - mirrors.tuna.tsinghua.edu.cn: ~341ms
+  - mirrors.ustc.edu.cn: ~358ms
+  - mirror.archlinuxarm.org: ~102ms
+
+### 🎯 **Recomendações Futuras**
+- **Termux:** Manter auto-detecção de mirrors (já implementado)
+- **Arch:** Usar mirrors europeus para melhor latência
+- **Monitoramento:** Verificar disponibilidade periódica dos mirrors
+
+---
+
 ## ⚡ **OTIMIZAÇÕES DE PERFORMANCE APLICADAS**
 
 ### 🚀 **CPU - Performance Máxima**
@@ -569,6 +603,31 @@ cat /sys/block/sda/queue/scheduler
 proot-distro login archlinux -- env GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 app
 ```
 
+---
+
+## 🤖 **AGENTES IA CONFIGURADOS**
+
+### 📋 **Agentes Disponíveis**
+- **DevSan (QWEN.md):** Agente AGI pessoal com protocolos avançados CO5P e VNE
+- **Gemini (Gemini.md):** Agente focado em português brasileiro e automação Termux
+
+### 🔧 **Configurações Principais**
+- **Linguagem:** Sempre em português brasileiro (pt-br)
+- **Estilo:** Uso de emojis contextuais em todas as respostas
+- **Ambiente:** Termux com root via KernelSU + Arch Linux PRoot
+- **Priorização:** Python, Shell Script, Node.js para automação
+
+### 🎯 **Protocolos de Operação**
+- **CO5P:** Análise, Enriquecimento, Planejamento, Verificação Web, Execução
+- **VNE:** Verbose Natural Execution com feedback claro
+- **Segurança:** Justificativa obrigatória para uso de `su` e modificações críticas
+
+### 📚 **Arquivos de Referência**
+- [QWEN.md](QWEN.md) - Manifesto completo do DevSan AGI
+- [Android16.md](../Android16.md) - Análise completa do ambiente Android
+- [Gemini.md](Gemini.md) - Diretrizes para automação inteligente
+
+---
 ---
 
 ## 🎉 **CONCLUSÃO**
