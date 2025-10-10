@@ -15,6 +15,7 @@
 📍 COMANDOS DE CONEXÃO...............linhas: 357-396
 📍 ATUALIZAÇÃO DINÂMICA..............linhas: 397-436
 📍 AGENTES IA CONFIGURADOS...........linhas: 605-625
+📍 RASTREAMENTO IPs FIXOS..............linhas: 630-660
 ```
 
 ---
@@ -69,8 +70,8 @@ adb shell ping -c 1 8.8.8.8
 
 ### 📱 **Informações de Conexão**
 - **Device ID ADB:** 72e24d130223
-- **IP Atual:** 192.168.25.2 (rede atual)
-- **Nome do PC:** DeiviPC
+- **IP Atual:** 172.17.9.9 (rede atual)
+- **Nome do PC:** T08828702540
 - **Porta SSH:** 8022
 - **Usuário SSH:** u0_a620
 - **Método de Autenticação:** Chave SSH (sem senha)
@@ -303,7 +304,7 @@ function extract() {
 #!/bin/bash
 # auto_connect.sh - Conecta automaticamente ao Termux
 
-IP="192.168.25.2"
+IP="172.17.9.9"
 PORT="8022"
 USER="u0_a620"
 KEY="$HOME/.ssh/id_ed25519_termux"
@@ -330,7 +331,7 @@ ssh -i "$KEY" -p "$PORT" "$USER@$IP"
 #!/bin/bash
 # sync_files.sh - Sincroniza arquivos entre PC e Termux
 
-TERMUX_IP="192.168.25.2"
+TERMUX_IP="172.17.9.9"
 TERMUX_USER="u0_a620"
 TERMUX_PATH="/data/data/com.termux/files/home"
 LOCAL_PATH="./termux_backup"
@@ -396,7 +397,7 @@ ollama run "$MODEL" "$PROMPT"
 ### 🔗 **Conexão Básica**
 ```bash
 # Via SSH com chave
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9
 
 # Via ADB shell (limitado)
 adb shell
@@ -408,10 +409,10 @@ adb shell su
 ### 📤 **Transferência de Arquivos**
 ```bash
 # Do PC para Termux
-scp -P 8022 -i ~/.ssh/id_ed25519_termux arquivo.txt u0_a620@192.168.25.2:~
+scp -P 8022 -i ~/.ssh/id_ed25519_termux arquivo.txt u0_a620@172.17.9.9:~
 
 # Do Termux para PC
-scp -P 8022 -i ~/.ssh/id_ed25519_termux u0_a620@192.168.25.2:~/arquivo.txt .
+scp -P 8022 -i ~/.ssh/id_ed25519_termux u0_a620@172.17.9.9:~/arquivo.txt .
 
 # Via ADB
 adb push arquivo.txt /sdcard/
@@ -421,13 +422,13 @@ adb pull /sdcard/arquivo.txt .
 ### 🚀 **Execução Remota**
 ```bash
 # Executar comando remoto
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "ls -la"
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9 "ls -la"
 
 # Executar script remoto
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "bash script.sh"
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9 "bash script.sh"
 
 # Entrar no Arch Linux via PRoot
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "proot-distro login archlinux"
+ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@172.17.9.9 "proot-distro login archlinux"
 ```
 
 ---
@@ -486,7 +487,7 @@ fi
 ```json
 {
   "device_id": "72e24d130223",
-  "current_ip": "192.168.25.2",
+  "current_ip": "172.17.9.9",
   "ssh_port": 8022,
   "ssh_user": "u0_a620",
   "root_available": true,
@@ -495,7 +496,7 @@ fi
   "archlinux_packages": 371,
   "ai_frameworks": ["pytorch", "transformers", "ollama"],
   "last_updated": "2025-10-08",
-  "pc_name": "DeiviPC",
+  "pc_name": "T08828702540",
   "connection_status": "active"
 }
 ```
@@ -627,6 +628,46 @@ proot-distro login archlinux -- env GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERR
 - [Android16.md](../Android16.md) - Análise completa do ambiente Android
 - [Gemini.md](Gemini.md) - Diretrizes para automação inteligente
 
+---
+
+## 📍 **RASTREAMENTO DE IPs FIXOS PARA MÚLTIPLOS PCs**
+
+### 🖥️ **PCs Registrados e IPs Fixos**
+Esta seção mantém um registro universal de IPs fixos para acesso de múltiplos computadores ao Termux, tornando o repositório acessível de qualquer PC autorizado.
+
+| Nome do PC | IP Fixo | Status | Última Atualização |
+|------------|---------|--------|-------------------|
+| T08828702540 | 172.17.9.9 | ✅ Ativo | 2025-10-10 |
+| DeiviPC | 192.168.25.2 | ✅ Ativo | 2025-10-10 |
+
+### 🔧 **Como Adicionar um Novo PC**
+1. **Obter IP atual do Termux:**
+   ```bash
+   adb shell ip addr show wlan0 | grep "inet " | awk '{print $2}' | cut -d'/' -f1
+   ```
+
+2. **Registrar no documento:**
+   - Adicionar linha na tabela acima
+   - Atualizar status para "Ativo"
+   - Inserir data atual
+
+3. **Configurar chaves SSH:**
+   - Copiar chave pública do novo PC para `authorized_keys`
+   - Testar conexão SSH
+
+### 📋 **Instruções para Agentes**
+- Sempre verificar IP atual antes de conectar
+- Usar tabela acima para identificar PC correto
+- Atualizar documento quando IP mudar
+- Manter apenas PCs autorizados na lista
+
+### ⚠️ **Considerações de Segurança**
+- IPs fixos devem ser de redes confiáveis
+- Chaves SSH devem ser únicas por PC
+- Remover PCs desautorizados imediatamente
+- Monitorar logs de acesso regularmente
+
+---
 ---
 ---
 
