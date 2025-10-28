@@ -15,6 +15,7 @@
 📍 COMANDOS DE CONEXÃO...............linhas: 357-396
 📍 ATUALIZAÇÃO DINÂMICA..............linhas: 397-436
 📍 AGENTES IA CONFIGURADOS...........linhas: 605-625
+📍 RASTREAMENTO IPs FIXOS..............linhas: 630-660
 ```
 
 ---
@@ -348,7 +349,7 @@ function extract() {
 #!/bin/bash
 # auto_connect.sh - Conecta automaticamente ao Termux
 
-IP="192.168.25.2"
+IP="172.17.9.9"
 PORT="8022"
 USER="u0_a575"
 KEY="$HOME/.ssh/deivitech"
@@ -469,6 +470,9 @@ ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2 "ls -la"
 
 # Executar script remoto
 ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2 "bash script.sh"
+
+# Entrar no Arch Linux via PRoot
+ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2 "proot-distro login archlinux"
 ```
 
 ---
@@ -527,7 +531,7 @@ fi
 ```json
 {
   "device_id": "72e24d130223",
-  "current_ip": "192.168.25.2",
+  "current_ip": "172.17.9.9",
   "ssh_port": 8022,
   "ssh_user": "u0_a575",
   "root_available": true,
@@ -640,7 +644,7 @@ cat /sys/block/sda/queue/scheduler
 ### 🔧 **Configurações Principais**
 - **Linguagem:** Sempre em português brasileiro (pt-br)
 - **Estilo:** Uso de emojis contextuais em todas as respostas
-- **Ambiente:** Termux com root via KernelSU
+- **Ambiente:** Termux com root via KernelSU + Arch Linux PRoot
 - **Priorização:** Python, Shell Script, Node.js para automação
 
 ### 🎯 **Protocolos de Operação**
@@ -654,6 +658,44 @@ cat /sys/block/sda/queue/scheduler
 - [Gemini.md](Gemini.md) - Diretrizes para automação inteligente
 
 ---
+
+## 📍 **RASTREAMENTO DE IPs FIXOS PARA MÚLTIPLOS PCs**
+
+### 🖥️ **PCs Registrados e IPs Fixos**
+Esta seção mantém um registro universal de IPs fixos para acesso de múltiplos computadores ao Termux, tornando o repositório acessível de qualquer PC autorizado.
+
+| Nome do PC | IP Fixo | Status | Última Atualização |
+|------------|---------|--------|-------------------|
+| T08828702540 | 172.17.9.9 | ✅ Ativo | 2025-10-10 |
+| DeiviPC | 192.168.25.2 | ✅ Ativo | 2025-10-10 |
+
+### 🔧 **Como Adicionar um Novo PC**
+1. **Obter IP atual do Termux:**
+   ```bash
+   adb shell ip addr show wlan0 | grep "inet " | awk '{print $2}' | cut -d'/' -f1
+   ```
+
+2. **Registrar no documento:**
+   - Adicionar linha na tabela acima
+   - Atualizar status para "Ativo"
+   - Inserir data atual
+
+3. **Configurar chaves SSH:**
+   - Copiar chave pública do novo PC para `authorized_keys`
+   - Testar conexão SSH
+
+### 📋 **Instruções para Agentes**
+- Sempre verificar IP atual antes de conectar
+- Usar tabela acima para identificar PC correto
+- Atualizar documento quando IP mudar
+- Manter apenas PCs autorizados na lista
+
+### ⚠️ **Considerações de Segurança**
+- IPs fixos devem ser de redes confiáveis
+- Chaves SSH devem ser únicas por PC
+- Remover PCs desautorizados imediatamente
+- Monitorar logs de acesso regularmente
+
 ---
 
 ## 🎉 **CONCLUSÃO**
