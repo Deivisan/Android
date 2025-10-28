@@ -19,7 +19,84 @@
 
 ---
 
-## 🎯 **DETECÇÃO AUTOMÁTICA PARA AGENTES**
+## 🤖 **AGENTE INTELIGENTE - AUTO-CONEXÃO TERMUX**
+
+### 🚀 **Script de Conexão Inteligente (Para Agentes)**
+```bash
+#!/bin/bash
+# auto_termux_connect.sh - Conecta automaticamente ao Termux com detecção inteligente
+
+# Auto-detecção de device
+DEVICE_ID=$(adb devices | grep -v "List" | grep "device" | head -1 | awk '{print $1}')
+if [ -z "$DEVICE_ID" ]; then
+    echo "❌ Nenhum device Android conectado via ADB"
+    exit 1
+fi
+
+# Auto-detecção de IP
+CURRENT_IP=$(adb shell ip addr show wlan0 2>/dev/null | grep "inet " | awk '{print $2}' | cut -d'/' -f1)
+if [ -z "$CURRENT_IP" ]; then
+    echo "❌ Não foi possível obter IP via ADB"
+    exit 1
+fi
+
+# Auto-detecção de usuário SSH
+SSH_USER=$(adb shell ps | grep sshd | awk '{print $1}' | head -1)
+if [ -z "$SSH_USER" ]; then
+    echo "❌ SSH não está rodando no Termux"
+    exit 1
+fi
+
+# Auto-seleção de chave SSH
+SSH_KEYS=("$HOME/.ssh/deivitech" "$HOME/.ssh/id_ed25519_termux" "$HOME/.ssh/termux_key")
+SSH_KEY=""
+for key in "${SSH_KEYS[@]}"; do
+    if [ -f "$key" ]; then
+        # Testar conexão com timeout
+        if ssh -i "$key" -p 8022 -o ConnectTimeout=3 -o StrictHostKeyChecking=no "$SSH_USER@$CURRENT_IP" "echo 'OK'" &>/dev/null; then
+            SSH_KEY="$key"
+            break
+        fi
+    fi
+done
+
+if [ -z "$SSH_KEY" ]; then
+    echo "❌ Nenhuma chave SSH válida encontrada"
+    exit 1
+fi
+
+echo "✅ Conexão automática estabelecida!"
+echo "📱 Device: $DEVICE_ID"
+echo "🌐 IP: $CURRENT_IP"
+echo "👤 User: $SSH_USER"
+echo "🔑 Key: $(basename "$SSH_KEY")"
+
+# Conectar
+ssh -i "$SSH_KEY" -p 8022 "$SSH_USER@$CURRENT_IP"
+```
+
+### 🎯 **Como Usar (Para Agentes)**
+1. **Conectar cabo USB** ao celular
+2. **Executar:** `bash auto_termux_connect.sh`
+3. **Pronto!** Conexão automática estabelecida
+
+### � **Desabilitar Mensagem de Welcome**
+```bash
+# Criar arquivo .hushlogin para desabilitar mensagem padrão do Termux
+touch ~/.hushlogin
+```
+
+### �📊 **Status de Conectividade Inteligente**
+- **ADB:** $(adb devices | grep -c "device$" || echo "0") device(s) conectado(s)
+- **IP Atual:** $(adb shell ip addr show wlan0 2>/dev/null | grep "inet " | awk '{print $2}' | cut -d'/' -f1 || echo "N/A")
+- **SSH User:** $(adb shell ps | grep sshd | awk '{print $1}' | head -1 || echo "N/A")
+- **Chave Ativa:** deivitech (auto-detectada)
+- **Status ZSH:** ✅ **COMPLETO** (shell padrão + mensagem DeiviTech)
+- **Oh My Zsh:** ✅ **INSTALADO** (clonado via git)
+- **Shell Config:** ✅ **ZSH PADRÃO** (termux.properties + bashrc)
+- **Welcome Message:** ✅ **DESABILITADA** (.hushlogin criado)
+
+---
 
 ### 🤖 **Script de Detecção Inteligente**
 ```bash
@@ -68,20 +145,35 @@ adb shell ping -c 1 8.8.8.8
 ## 🔗 **CONEXÃO ADB & SSH**
 
 ### 📱 **Informações de Conexão**
+- **Device Model:** POCO X5 5G
 - **Device ID ADB:** 72e24d130223
-- **IP Atual:** 192.168.25.2 (rede atual)
-- **Nome do PC:** DeiviPC
+- **Kernel:** 5.4.292-Eclipse /d9de8c1e
+- **Android Version:** Detectável via `adb shell getprop ro.build.version.release`
+- **IP Atual:** 192.168.25.2 (rede atual, variável)
+- **Nome do PC:** DeiviPC (Arch Linux)
 - **Porta SSH:** 8022
-- **Usuário SSH:** u0_a620
+- **Usuário SSH:** u0_a575 (atualizado após format - auto-detect via adb shell ps | grep sshd)
 - **Método de Autenticação:** Chave SSH (sem senha)
 - **Root Access:** Total via KernelSU
 
 ### 🔐 **Status de Conectividade**
-- **ADB:** ✅ Conectado via cabo USB
-- **SSH Server:** ✅ Ativo no Termux
-- **Root:** ✅ Habilitado via KernelSU
-- **SSH sem senha:** ✅ Configurado do PC Windows
+- **ADB:** ✅ **CONECTADO** (device 72e24d130223, última confirmação: 23/10/2025)
+- **SSH Server:** ✅ Ativo quando ADB conectado
+- **Root:** ✅ KernelSU habilitado (acesso total via `su`)
+- **SSH sem senha:** ✅ Configurado via authorized_keys
 - **Firewall:** Nenhum bloqueio detectado
+
+### 💾 **Hardware Specs (POCO X5 5G)**
+- **RAM:** 7.2GB total (MemTotal: 7,442,248 kB)
+  - Usada: ~7.0GB durante uso normal
+  - Disponível: ~200MB livre típico
+  - Buffers/Cached: ~2-3GB
+- **Storage:** 223GB total (data partition)
+  - Usado: 96GB (43%)
+  - Disponível: 127GB (57%)
+  - Filesystem: F2FS (Flash-Friendly File System)
+- **Processor:** Qualcomm Snapdragon (detectar via `adb shell cat /proc/cpuinfo`)
+- **GPU:** Adreno (integrated)
 
 ---
 
@@ -99,8 +191,9 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOTd0l+8Sef2nwmj6/RiVFM7mexqQXULJIJps+5ekx1o
 ```
 
 ###  **Chave Privada Correspondente (para agentes)**
-- **Localização:** `/data/data/com.termux/files/home/.ssh/id_ed25519`
-- **Tipo:** ED25519
+- **Localização PC:** `~/.ssh/deivitech` (chave atual para conexão)
+- **Localização Termux:** `/data/data/com.termux/files/home/.ssh/id_ed25519`
+- **Tipo:** RSA/ECDSA (deivitech)
 - **Uso:** Conexão automática sem senha
 - **Nota:** Chave privada deve ser usada com cautela
 
@@ -115,7 +208,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOTd0l+8Sef2nwmj6/RiVFM7mexqQXULJIJps+5ekx1o
 - **Shell Ativo:** ZSH 5.9 + Starship 1.23.0 ✅
 - **Permissões:** Root total via KernelSU ✅
 - **ZRAM:** 8GB configurado automaticamente ✅
-- **Usuário Atual:** u0_a620 ✅
+- **Usuário Atual:** u0_a575 ✅
 - **CPU Governor:** Performance (máximo desempenho) ✅
 - **I/O Scheduler:** Deadline (otimizado) ✅
 - **Memory Swappiness:** 100 (máxima utilização) ✅
@@ -182,54 +275,6 @@ tokenizers        # ✅ HF Tokenizers
 onnx              # ✅ Open Neural Network Exchange
 onnxruntime       # ✅ ONNX Runtime
 tflite-runtime    # ✅ TensorFlow Lite
-```
-
----
-
-## 🐧 **PROOT DISTRO ARCH LINUX**
-
-### 📋 **Status da Instalação**
-- **Distribuição:** Arch Linux ✅ **INSTALADO**
-- **Método:** PRoot (sem chroot)
-- **Status:** Instalado e configurado ✅ **CONFIRMADO**
-- **Localização:** `/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs/archlinux`
-- **Arquitetura:** aarch64
-- **Pacotes Totais:** 371 pacotes ✅ **ATUALIZADO**
-
-### 🚀 **Recursos Disponíveis**
-- **Pacman:** Gerenciador de pacotes Arch
-- **AUR Access:** Via yay ou paru
-- **Systemd:** Não disponível (PRoot limitation)
-- **Kernel Modules:** Limitado ao Android kernel
-- **GUI:** Possível via VNC/X11 forwarding
-
-### 📦 **Pacotes Essenciais Instalados**
-```bash
-base              # Sistema base Arch
-linux-aarch64     # Kernel headers
-pacman            # Package manager
-sudo              # Privilege escalation
-vim               # Editor de texto
-git               # Version control
-python 3.13.7     # Python interpreter (mais recente)
-nodejs 24.9.0     # Node.js runtime (sincronizado)
-rust 1.89.0       # Rust compiler (versão Arch)
-go 1.25.0         # Go compiler (compatível)
-```
-
-### 🔧 **Comandos de Gerenciamento**
-```bash
-# Entrar no Arch Linux
-proot-distro login archlinux
-
-# Instalar pacotes
-proot-distro login archlinux -- pacman -S package_name
-
-# Atualizar sistema
-proot-distro login archlinux -- pacman -Syu
-
-# Sair
-exit
 ```
 
 ---
@@ -305,8 +350,8 @@ function extract() {
 
 IP="192.168.25.2"
 PORT="8022"
-USER="u0_a620"
-KEY="$HOME/.ssh/id_ed25519_termux"
+USER="u0_a575"
+KEY="$HOME/.ssh/deivitech"
 
 # Verificar se device está conectado
 if ! adb devices | grep -q "device$"; then
@@ -331,16 +376,16 @@ ssh -i "$KEY" -p "$PORT" "$USER@$IP"
 # sync_files.sh - Sincroniza arquivos entre PC e Termux
 
 TERMUX_IP="192.168.25.2"
-TERMUX_USER="u0_a620"
+TERMUX_USER="u0_a575"
 TERMUX_PATH="/data/data/com.termux/files/home"
 LOCAL_PATH="./termux_backup"
 
 # Sincronizar do Termux para PC
-rsync -avz -e "ssh -p 8022 -i $HOME/.ssh/id_ed25519_termux" \
+rsync -avz -e "ssh -p 8022 -i $HOME/.ssh/deivitech" \
     "$TERMUX_USER@$TERMUX_IP:$TERMUX_PATH/" "$LOCAL_PATH/"
 
 # Sincronizar do PC para Termux
-rsync -avz -e "ssh -p 8022 -i $HOME/.ssh/id_ed25519_termux" \
+rsync -avz -e "ssh -p 8022 -i $HOME/.ssh/deivitech" \
     "$LOCAL_PATH/" "$TERMUX_USER@$TERMUX_IP:$TERMUX_PATH/"
 ```
 
@@ -380,7 +425,6 @@ ollama run "$MODEL" "$PROMPT"
 - [ ] Chave SSH configurada
 - [ ] Conexão SSH estabelecida
 - [ ] Ambiente Termux explorado
-- [ ] Proot Arch Linux acessado
 - [ ] Scripts de automação testados
 
 ### ⚠️ **Limitações e Considerações**
@@ -396,7 +440,7 @@ ollama run "$MODEL" "$PROMPT"
 ### 🔗 **Conexão Básica**
 ```bash
 # Via SSH com chave
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2
+ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2
 
 # Via ADB shell (limitado)
 adb shell
@@ -408,10 +452,10 @@ adb shell su
 ### 📤 **Transferência de Arquivos**
 ```bash
 # Do PC para Termux
-scp -P 8022 -i ~/.ssh/id_ed25519_termux arquivo.txt u0_a620@192.168.25.2:~
+scp -P 8022 -i ~/.ssh/deivitech arquivo.txt u0_a575@192.168.25.2:~
 
 # Do Termux para PC
-scp -P 8022 -i ~/.ssh/id_ed25519_termux u0_a620@192.168.25.2:~/arquivo.txt .
+scp -P 8022 -i ~/.ssh/deivitech u0_a575@192.168.25.2:~/arquivo.txt .
 
 # Via ADB
 adb push arquivo.txt /sdcard/
@@ -421,13 +465,10 @@ adb pull /sdcard/arquivo.txt .
 ### 🚀 **Execução Remota**
 ```bash
 # Executar comando remoto
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "ls -la"
+ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2 "ls -la"
 
 # Executar script remoto
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "bash script.sh"
-
-# Entrar no Arch Linux via PRoot
-ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@192.168.25.2 "proot-distro login archlinux"
+ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2 "bash script.sh"
 ```
 
 ---
@@ -475,7 +516,7 @@ else
 fi
 
 # Verificar conectividade
-if ssh -i ~/.ssh/id_ed25519_termux -p 8022 -o ConnectTimeout=5 u0_a620@$NEW_IP "echo 'OK'" &>/dev/null; then
+if ssh -i ~/.ssh/deivitech -p 8022 -o ConnectTimeout=5 u0_a575@$NEW_IP "echo 'OK'" &>/dev/null; then
     echo "Conexão SSH OK"
 else
     echo "Problema na conexão SSH"
@@ -488,13 +529,13 @@ fi
   "device_id": "72e24d130223",
   "current_ip": "192.168.25.2",
   "ssh_port": 8022,
-  "ssh_user": "u0_a620",
+  "ssh_user": "u0_a575",
   "root_available": true,
-  "proot_archlinux": true,
+  "proot_archlinux": false,
   "termux_packages": 194,
   "archlinux_packages": 371,
   "ai_frameworks": ["pytorch", "transformers", "ollama"],
-  "last_updated": "2025-10-08",
+  "last_updated": "2025-10-25",
   "pc_name": "DeiviPC",
   "connection_status": "active"
 }
@@ -512,26 +553,14 @@ fi
 - **Mirrors Utilizados:** packages-cf.termux.dev, mirrors.ustc.edu.cn, mirrors.tuna.tsinghua.edu.cn
 - **Resultado:** ✅ **ATUALIZAÇÃO BEM-SUCEDIDA** (pkg update && pkg upgrade)
 
-### 🐧 **Arch Linux Mirrors**
-- **Mirror Anterior:** `Server = http://mirror.archlinuxarm.org/$arch/$repo`
-- **Tentativa HTTPS:** `Server = https://mirror.archlinuxarm.org/$arch/$repo`
-- **Erro SSL:** "SSL: no alternative certificate subject name matches target hostname"
-- **Correção Aplicada:** `Server = http://eu.mirror.archlinuxarm.org/$arch/$repo`
-- **Status:** ✅ **FUNCIONAL** (HTTP sem SSL)
-- **Resultado:** ✅ **ATUALIZAÇÃO BEM-SUCEDIDA** (pacman -Syu --noconfirm)
-
 ### 📊 **Testes de Velocidade Realizados**
 - **Termux Mirror Atual:** ~387ms ping, curl falhou (timeout)
-- **Arch Mirror Atual:** ~228ms ping, curl falhou (timeout)
 - **Mirrors Alternativos PC:**
   - mirrors.tuna.tsinghua.edu.cn: ~341ms
   - mirrors.ustc.edu.cn: ~358ms
-  - mirror.archlinuxarm.org: ~102ms
 
 ### 🎯 **Recomendações Futuras**
 - **Termux:** Manter auto-detecção de mirrors (já implementado)
-- **Arch:** Usar mirrors europeus para melhor latência
-- **Monitoramento:** Verificar disponibilidade periódica dos mirrors
 
 ---
 
@@ -598,9 +627,6 @@ fi
 cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 cat /proc/sys/vm/swappiness
 cat /sys/block/sda/queue/scheduler
-
-# Para proot-distro com GPU
-proot-distro login archlinux -- env GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0 app
 ```
 
 ---
@@ -614,7 +640,7 @@ proot-distro login archlinux -- env GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERR
 ### 🔧 **Configurações Principais**
 - **Linguagem:** Sempre em português brasileiro (pt-br)
 - **Estilo:** Uso de emojis contextuais em todas as respostas
-- **Ambiente:** Termux com root via KernelSU + Arch Linux PRoot
+- **Ambiente:** Termux com root via KernelSU
 - **Priorização:** Python, Shell Script, Node.js para automação
 
 ### 🎯 **Protocolos de Operação**
@@ -632,6 +658,36 @@ proot-distro login archlinux -- env GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERR
 
 ## 🎉 **CONCLUSÃO**
 
-Este documento fornece um mapeamento completo e inteligente do ambiente Termux, permitindo que agentes detectem automaticamente o dispositivo, estabeleçam conexão segura e utilizem todos os recursos disponíveis. O sistema está otimizado para desenvolvimento, IA local e automação, com root total via KernelSU e integração completa com Arch Linux via PRoot.
+Este documento fornece um mapeamento completo e inteligente do ambiente Termux, permitindo que agentes detectem automaticamente o dispositivo, estabeleçam conexão segura e utilizem todos os recursos disponíveis. O sistema está otimizado para desenvolvimento, IA local e automação, com root total via KernelSU.
 
 **Status Final:** ✅ Totalmente funcional e documentado para agentes inteligentes.
+
+---
+## 🔥 **MODO HARDCORE TERMUX ATIVADO** 🚀
+
+### ⚡ **Características do Modo Hardcore**
+- **Segurança mínima:** Usuário sabe o que faz ✅
+- **Execução plena:** Sem restrições desnecessárias ✅
+- **Root total:** KernelSU habilitado ✅
+- **Performance máxima:** Todos os núcleos ativos ✅
+
+### 🚀 **Scripts Hardcore Disponíveis**
+```bash
+# Inicialização hardcore universal
+bash termux-universal-init.sh
+
+# Validação completa hardcore
+bash termux-universal-validator.sh
+
+# Configuração MCP hardcore
+cat mcp-termux-universal.json
+```
+
+### 📊 **Status Hardcore**
+- **Arquivos únicos:** ✅ Mantidos e preservados
+- **Agentes coordenados:** ✅ DevSan, Qwen, Gemini ativos
+- **MCPs universais:** ✅ Todos os servidores configurados
+- **Performance:** ✅ Máxima habilitada
+- **Root:** ✅ Total liberado
+
+**🎯 Modo Hardcore: ATIVO E OPERACIONAL** 🔥
