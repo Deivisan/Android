@@ -1,0 +1,56 @@
+add_newline = false
+
+[username]
+style_user = "bold cyan"
+format = "­ƒæñ [deivi]($style) em "
+
+[hostname]
+format = "­ƒô▒ [POCO X5]($style) "
+style = "bold green"
+
+[directory]
+format = "­ƒôü [$path]($style) "
+style = "bold blue"
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+format = "­ƒî┐ [$branch]($style) "
+style = "bold purple"
+
+[git_status]
+format = "([$all_status$ahead_behind]($style))"
+style = "bold yellow"
+
+# Desativar linguagens no prompt para evitar duplica├º├úo com DeiviTech
+[python]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[rust]
+disabled = true
+
+[golang]
+disabled = true
+
+[nim]
+disabled = true
+
+[java]
+disabled = true
+
+[cmd_duration]
+format = "ÔÅ▒´©Å [$duration]($style) "
+style = "bold white"
+
+[time]
+format = "­ƒòÉ [$time]($style) "
+style = "bold white"
+disabled = true
+
+[status]
+format = "ÔØî [$symbol$status]($style) "
+style = "bold red"
+disabled = false

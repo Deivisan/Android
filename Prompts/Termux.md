@@ -2,6 +2,7 @@
 # 🚀 **TERMUX - MAPEAMENTO COMPLETO E INTELIGENTE** [GUIA DE REFERÊNCIA PARA AGENTES]
 
 ## 📚 **ÍNDICE DE NAVEGAÇÃO - GUIA DE REFERÊNCIA** [LINHAS EXATAS]
+
 ```
 📍 DETECÇÃO AUTOMÁTICA...............linhas: 22-66
 📍 CONEXÃO ADB & SSH.................linhas: 68-86
@@ -23,6 +24,7 @@
 ## 🤖 **AGENTE INTELIGENTE - AUTO-CONEXÃO TERMUX**
 
 ### 🚀 **Script de Conexão Inteligente (Para Agentes)**
+
 ```bash
 #!/bin/bash
 # auto_termux_connect.sh - Conecta automaticamente ao Termux com detecção inteligente
@@ -77,17 +79,20 @@ ssh -i "$SSH_KEY" -p 8022 "$SSH_USER@$CURRENT_IP"
 ```
 
 ### 🎯 **Como Usar (Para Agentes)**
+
 1. **Conectar cabo USB** ao celular
 2. **Executar:** `bash auto_termux_connect.sh`
 3. **Pronto!** Conexão automática estabelecida
 
 ### � **Desabilitar Mensagem de Welcome**
+
 ```bash
 # Criar arquivo .hushlogin para desabilitar mensagem padrão do Termux
 touch ~/.hushlogin
 ```
 
 ### �📊 **Status de Conectividade Inteligente**
+
 - **ADB:** $(adb devices | grep -c "device$" || echo "0") device(s) conectado(s)
 - **IP Atual:** $(adb shell ip addr show wlan0 2>/dev/null | grep "inet " | awk '{print $2}' | cut -d'/' -f1 || echo "N/A")
 - **SSH User:** $(adb shell ps | grep sshd | awk '{print $1}' | head -1 || echo "N/A")
@@ -100,6 +105,7 @@ touch ~/.hushlogin
 ---
 
 ### 🤖 **Script de Detecção Inteligente**
+
 ```bash
 #!/bin/bash
 # Script para agentes detectarem automaticamente o Termux
@@ -130,6 +136,7 @@ echo "Pronto para conexão SSH na porta 8022"
 ```
 
 ### 📡 **Comandos de Verificação**
+
 ```bash
 # Verificar status do device
 adb devices
@@ -146,18 +153,20 @@ adb shell ping -c 1 8.8.8.8
 ## 🔗 **CONEXÃO ADB & SSH**
 
 ### 📱 **Informações de Conexão**
+
 - **Device Model:** POCO X5 5G
 - **Device ID ADB:** 72e24d130223
-- **Kernel:** 5.4.292-Eclipse /d9de8c1e
-- **Android Version:** Detectável via `adb shell getprop ro.build.version.release`
-- **IP Atual:** 192.168.25.2 (rede atual, variável)
-- **Nome do PC:** DeiviPC (Arch Linux)
+- **Kernel:** 5.4.294-Darkmoon-KSU
+- **Android Version:** 16 (API 36)
+- **IP Atual:** 172.17.9.9 (intranet UFRB, estável)
+- **Nome do PC:** PC-UFRB (T08828702540)
 - **Porta SSH:** 8022
-- **Usuário SSH:** u0_a575 (atualizado após format - auto-detect via adb shell ps | grep sshd)
+- **Usuário SSH:** u0_a575 (confirmado 29/10/2025)
 - **Método de Autenticação:** Chave SSH (sem senha)
 - **Root Access:** Total via KernelSU
 
 ### 🔐 **Status de Conectividade**
+
 - **ADB:** ✅ **CONECTADO** (device 72e24d130223, última confirmação: 23/10/2025)
 - **SSH Server:** ✅ Ativo quando ADB conectado
 - **Root:** ✅ KernelSU habilitado (acesso total via `su`)
@@ -165,6 +174,7 @@ adb shell ping -c 1 8.8.8.8
 - **Firewall:** Nenhum bloqueio detectado
 
 ### 💾 **Hardware Specs (POCO X5 5G)**
+
 - **RAM:** 7.2GB total (MemTotal: 7,442,248 kB)
   - Usada: ~7.0GB durante uso normal
   - Disponível: ~200MB livre típico
@@ -180,29 +190,68 @@ adb shell ping -c 1 8.8.8.8
 
 ## 🔑 **CHAVES SSH**
 
-### 🆕 **Chave Pública SSH (para authorized_keys)**
+### 🆕 **Chave Pública SSH Atual (PC-UFRB → Termux)**
+
 ```
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKFT6aGVm4lyE2Vxr0NrCvtY8o0JKpnE6gwzsu+b4iDFmN+GMj2eRXAqYNQELt4xpaDISZmcyPLAIzrlVsBfVo+QKZHLCc5n7WjsH5qgIebPR93NCiStN44a5rl6ALTb50g2dectoJNDELv+HQfECG1r7dKstewSjEuUkw8J8MatUEC+0uN6S/NnWYT3TKSVGRXuc1Buz9clYnfz0ljuN2gA2+4bVov2ovK3ynHf74M00r+oHRfiJpX5YtPQeC42G/kqgrJZtsoxEh5BT+24HgoEhH8TTY9YHSFI3QcbCj59lemPeFOIbY6SM34bdO3icqe3ELxpBW3af3BsOPQCF2hKf3QDW1SlqBUr2k5Yr5fK47IXlhfWOmXbkUfZQf/JufKBXSawtWbbjFo1ER77HP1HILIaCNkiA08iHj8kKWwYLWMlL6ja1s2OI4665bDAy6Md4nv3lgWw1l96UJ6Qk8/5fxUpyF0OW+YRMWbEPiarX44NVsNeivSYY5Ad3tncWWr8O2cLXilfcutKxekLQwKtfaySH22g+svgchptfrBSCaqEtT22IRJ0KVkK7+X+vb1aQXREpbcS21ebGEeCq4/JFic7hjgcS+Bc21tSY5vSUpt5VCOuhRNjB47Gg1R/oyI3XniwOlptwVlbTuKxt1Ql1Jf3mMnW3TFAusBBbEwQ== ufrb\t08828702540@UFRB100550
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOwDHmpNDk7/VUEDSPAU1cpDn7ACrYuRCkqLgTOXpaAt PC-to-Termux
 ```
+
+**Conexão Passwordless Ativa:**
+
+- Tipo: ed25519 (mais seguro que RSA)
+- Localização PC: `C:\Users\T08828702540\.ssh\id_termux_nopass`
+- Fingerprint: `SHA256:XWx6uyJ/lFk2Qoq9NuviKf260LxEpOAONO9YlNxN9u4`
 
 ### 🔑 **Chaves Autorizadas (authorized_keys atual)**
+
 ```
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICqYJW5yVqBmekOwqryvc4gQOqbQTDIjAKPUn+/CrKf1 termux-connection
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOTd0l+8Sef2nwmj6/RiVFM7mexqQXULJIJps+5ekx1o ufrb\t08828702540@UFRB100550
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOwDHmpNDk7/VUEDSPAU1cpDn7ACrYuRCkqLgTOXpaAt PC-to-Termux
 ```
 
-###  **Chave Privada Correspondente (para agentes)**
-- **Localização PC:** `~/.ssh/deivitech` (chave atual para conexão)
-- **Localização Termux:** `/data/data/com.termux/files/home/.ssh/id_ed25519`
-- **Tipo:** RSA/ECDSA (deivitech)
-- **Uso:** Conexão automática sem senha
-- **Nota:** Chave privada deve ser usada com cautela
+### 📋 **Configuração SSH do PC (C:\Users\T08828702540\.ssh\config)**
+
+```ssh
+# Termux Connection - Updated 2025-10-29 12:33
+Host termux
+    HostName 172.17.9.9
+    User u0_a575
+    Port 8022
+    IdentityFile C:\Users\T08828702540\.ssh\id_termux_nopass
+    IdentitiesOnly yes
+    PreferredAuthentications publickey
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    StrictHostKeyChecking no
+```
+
+**Comando de Conexão:**
+
+```bash
+# Método preferido (usando alias do config)
+ssh termux
+
+# Método alternativo (parâmetros explícitos)
+ssh -i ~/.ssh/id_termux_nopass -p 8022 u0_a575@172.17.9.9
+
+# PowerShell (Windows)
+ssh -i C:\Users\T08828702540\.ssh\id_termux_nopass -p 8022 u0_a575@172.17.9.9
+```
+
+### 🔐 **Chave Privada (para agentes)**
+
+- **Localização PC:** `C:\Users\T08828702540\.ssh\id_termux_nopass`
+- **Tipo:** ED25519 (256-bit, mais seguro que RSA 2048)
+- **Fingerprint:** `SHA256:XWx6uyJ/lFk2Qoq9NuviKf260LxEpOAONO9YlNxN9u4`
+- **Uso:** Conexão passwordless automática
+- **⚠️ Segurança:** Chave privada NUNCA deve ser compartilhada ou commitada
+- **Para outros agentes:** Adicionar chave pública acima ao `~/.ssh/authorized_keys` do Termux
 
 ---
 
 ## 🖥️ **SISTEMA TERMUX**
 
 ### 📊 **Status Atual**
+
 - **Versão Termux:** F-Droid (atualizada) ✅
 - **Pacotes Instalados:** 194 pacotes ✅
 - **SSH Server:** Ativo na porta 8022 ✅
@@ -217,6 +266,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOTd0l+8Sef2nwmj6/RiVFM7mexqQXULJIJps+5ekx1o
 - **Network TCP:** Otimizado para alta performance ✅
 
 ### 🧠 **Recursos do Sistema**
+
 - **Arquitetura:** aarch64 (ARM64)
 - **Kernel:** Linux 5.4.294-Darkmoon-KSU
 - **Memória RAM:** 7.2GB total, ZRAM 8GB
@@ -228,15 +278,18 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOTd0l+8Sef2nwmj6/RiVFM7mexqQXULJIJps+5ekx1o
 ## 📦 **PACOTES INSTALADOS**
 
 ### 💻 **Linguagens de Programação**
+
 ```bash
-Python 3.12.11     # ✅ Instalado e funcional
+Python 3.12.12     # ✅ Instalado e funcional
 Node.js v24.9.0    # ✅ Atualizado para versão mais recente
+Java 21.0.9        # ✅ OpenJDK LTS (OpenJDK Runtime Environment)
 Rust 1.90.0        # ✅ Atualizado para versão mais recente
 Go 1.25.0          # ✅ Atualizado para versão mais recente
 clang 20.1.8       # ✅ Compilador C/C++ funcional
 ```
 
 ### 🛠️ **Ferramentas de Desenvolvimento**
+
 ```bash
 git               # ✅ Controle de versão ativo
 bash 5.3.3        # ✅ Shell funcional
@@ -250,6 +303,7 @@ fzf               # ✅ Fuzzy finder
 ```
 
 ### 🌐 **Ferramentas de Rede**
+
 ```bash
 curl              # ✅ HTTP client ativo
 wget              # ✅ Download manager
@@ -259,6 +313,7 @@ wireshark-cli     # ✅ Packet analyzer
 ```
 
 ### 🤖 **Frameworks IA & ML**
+
 ```bash
 torch             # ✅ PyTorch para ML
 transformers      # ✅ Hugging Face transformers
@@ -283,6 +338,7 @@ tflite-runtime    # ✅ TensorFlow Lite
 ## ⚙️ **CONFIGURAÇÕES & ALIASES**
 
 ### 🐚 **Shell Configuration (.zshrc)**
+
 ```bash
 # Starship prompt
 eval "$(starship init zsh)"
@@ -322,6 +378,7 @@ function extract() {
 ```
 
 ### 🔧 **Git Configuration**
+
 ```bash
 # .gitconfig
 [user]
@@ -345,6 +402,7 @@ function extract() {
 ## 🤖 **SCRIPTS DE AUTOMAÇÃO**
 
 ### 📡 **Script de Conexão Automática**
+
 ```bash
 #!/bin/bash
 # auto_connect.sh - Conecta automaticamente ao Termux
@@ -372,6 +430,7 @@ ssh -i "$KEY" -p "$PORT" "$USER@$IP"
 ```
 
 ### 🔄 **Script de Sincronização**
+
 ```bash
 #!/bin/bash
 # sync_files.sh - Sincroniza arquivos entre PC e Termux
@@ -391,6 +450,7 @@ rsync -avz -e "ssh -p 8022 -i $HOME/.ssh/deivitech" \
 ```
 
 ### 🤖 **Script de IA Local**
+
 ```bash
 #!/bin/bash
 # run_ai.sh - Executa modelos de IA localmente
@@ -413,6 +473,7 @@ ollama run "$MODEL" "$PROMPT"
 ## 🎯 **INSTRUÇÕES PARA AGENTES**
 
 ### 🤖 **Como Usar Este Documento**
+
 1. **Leitura Inicial:** Leia todas as seções para entender o ambiente
 2. **Detecção Automática:** Use o script de detecção para encontrar o device
 3. **Conexão:** Use os comandos de conexão com as chaves fornecidas
@@ -421,6 +482,7 @@ ollama run "$MODEL" "$PROMPT"
 6. **Atualização:** Atualize o documento quando o IP mudar
 
 ### 📋 **Checklist para Agentes**
+
 - [ ] Device ADB detectado
 - [ ] IP atual obtido
 - [ ] Chave SSH configurada
@@ -429,6 +491,7 @@ ollama run "$MODEL" "$PROMPT"
 - [ ] Scripts de automação testados
 
 ### ⚠️ **Limitações e Considerações**
+
 - IP pode mudar entre redes
 - Conexão requer cabo USB para ADB
 - Root access necessário para algumas operações
@@ -439,6 +502,7 @@ ollama run "$MODEL" "$PROMPT"
 ## 💻 **COMANDOS DE CONEXÃO**
 
 ### 🔗 **Conexão Básica**
+
 ```bash
 # Via SSH com chave
 ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2
@@ -451,6 +515,7 @@ adb shell su
 ```
 
 ### 📤 **Transferência de Arquivos**
+
 ```bash
 # Do PC para Termux
 scp -P 8022 -i ~/.ssh/deivitech arquivo.txt u0_a575@192.168.25.2:~
@@ -464,6 +529,7 @@ adb pull /sdcard/arquivo.txt .
 ```
 
 ### 🚀 **Execução Remota**
+
 ```bash
 # Executar comando remoto
 ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2 "ls -la"
@@ -480,9 +546,11 @@ ssh -i ~/.ssh/deivitech -p 8022 u0_a575@192.168.25.2 "proot-distro login archlin
 ## 🔄 **ATUALIZAÇÃO DINÂMICA**
 
 ### 📝 **Como Atualizar o Documento**
+
 Quando o IP mudar ou configurações forem alteradas:
 
 1. **Detectar novo IP:**
+
    ```bash
    NEW_IP=$(adb shell ip addr show wlan0 | grep "inet " | awk '{print $2}' | cut -d'/' -f1)
    ```
@@ -493,11 +561,13 @@ Quando o IP mudar ou configurações forem alteradas:
    - Atualizar chaves SSH se necessário
 
 3. **Testar conexão:**
+
    ```bash
    ssh -i ~/.ssh/id_ed25519_termux -p 8022 u0_a620@$NEW_IP "echo 'Conexão OK'"
    ```
 
 ### 🤖 **Script de Atualização Automática**
+
 ```bash
 #!/bin/bash
 # update_termux_md.sh - Atualiza o Termux.md automaticamente
@@ -528,6 +598,7 @@ fi
 ```
 
 ### 📊 **Metadados para Agentes**
+
 ```json
 {
   "device_id": "72e24d130223",
@@ -550,6 +621,7 @@ fi
 ## 🔧 **CORREÇÕES DE MIRRORS REALIZADAS - 09/10/2025**
 
 ### 📱 **Termux Mirrors**
+
 - **Mirror Anterior:** `deb https://mirrors.nju.edu.cn/termux/apt/termux-main stable main`
 - **Mirror Configurado:** `deb https://mirrors.rda.run/termux/termux-main stable main`
 - **Status:** ⚠️ **DOMÍNIO INVÁLIDO** (mirrors.rda.run não resolve)
@@ -558,12 +630,14 @@ fi
 - **Resultado:** ✅ **ATUALIZAÇÃO BEM-SUCEDIDA** (pkg update && pkg upgrade)
 
 ### 📊 **Testes de Velocidade Realizados**
+
 - **Termux Mirror Atual:** ~387ms ping, curl falhou (timeout)
 - **Mirrors Alternativos PC:**
   - mirrors.tuna.tsinghua.edu.cn: ~341ms
   - mirrors.ustc.edu.cn: ~358ms
 
 ### 🎯 **Recomendações Futuras**
+
 - **Termux:** Manter auto-detecção de mirrors (já implementado)
 
 ---
@@ -571,18 +645,21 @@ fi
 ## ⚡ **OTIMIZAÇÕES DE PERFORMANCE APLICADAS**
 
 ### 🚀 **CPU - Performance Máxima**
+
 - **Governor:** Performance (todos os 8 cores)
 - **Frequência:** 2.2GHz (A78) + 1.7GHz (A55)
 - **Modo:** Sempre no máximo desempenho
 - **Impacto:** +200% performance em tarefas intensivas
 
 ### 💾 **I/O - Disco Otimizado**
+
 - **Scheduler:** Deadline (baixa latência)
 - **Read Ahead:** 2048KB (otimizado para SSD)
 - **Merges:** Desabilitado (performance pura)
 - **Impacto:** +150% velocidade de I/O
 
 ### 🧠 **Memória - VM Otimizada**
+
 - **Swappiness:** 100 (máxima utilização de swap)
 - **Dirty Ratio:** 10% (escrita eficiente)
 - **OOM Killer:** Desabilitado para processos importantes
@@ -590,6 +667,7 @@ fi
 - **Impacto:** +300% eficiência de memória
 
 ### 🌐 **Rede - TCP Otimizado**
+
 - **TCP Window:** 4MB (janelas grandes)
 - **Timestamps:** Habilitado
 - **SACK:** Habilitado
@@ -598,6 +676,7 @@ fi
 - **Impacto:** +500% velocidade de rede
 
 ### 🔓 **Sistema - Sem Restrições**
+
 - **SELinux:** Permissive (sem bloqueios)
 - **Root Access:** Total via KernelSU
 - **Kernel:** Eclipse customizado
@@ -605,24 +684,28 @@ fi
 - **Impacto:** Acesso completo aos recursos do sistema
 
 ### 🎮 **GPU - Aceleração Disponível**
+
 - **VirGL Renderer:** Instalado para proot-distro
 - **Variáveis:** `GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0`
 - **Uso:** 3D graphics em Linux containers
 - **Impacto:** Jogos e apps 3D funcionais
 
 ### 🤖 **Ferramentas de Otimização**
+
 - **Origami Kernel Manager:** Instalado (`okm` command)
 - **Script Automático:** `~/optimize_termux.sh`
 - **Boot Script:** `~/.termux/boot/max_performance.sh`
 - **Monitoramento:** Contínuo via scripts
 
 ### 📊 **Benchmarks de Performance**
+
 - **CPU:** 0.19s para 1M operações Python
 - **Memória:** 7.2GB RAM + 8GB ZRAM
 - **I/O:** SSD UFS 2.2 otimizado
 - **Rede:** TCP buffers de 4MB
 
 ### 🎯 **Como Manter Otimizações**
+
 ```bash
 # Executar otimizações manuais
 ~/optimize_termux.sh
@@ -638,21 +721,34 @@ cat /sys/block/sda/queue/scheduler
 ## 🤖 **AGENTES IA CONFIGURADOS**
 
 ### 📋 **Agentes Disponíveis**
+
+| Agente | Versão | Comando | Status |
+|--------|--------|---------|--------|
+| **Gemini** | v0.12.0-preview.0 | `gemini` | 🔴 Parado |
+| **Qwen** | v0.1.1 | `qwen` | 🔴 Parado |
+| **Copilot** | v0.1.36 | `github-copilot-cli` | 🔴 Parado |
+| **Kilocode** | v0.0.13 | `kilocode` | 🔴 Parado |
+
+**Documentação:**
+
 - **DevSan (QWEN.md):** Agente AGI pessoal com protocolos avançados CO5P e VNE
 - **Gemini (Gemini.md):** Agente focado em português brasileiro e automação Termux
 
 ### 🔧 **Configurações Principais**
+
 - **Linguagem:** Sempre em português brasileiro (pt-br)
 - **Estilo:** Uso de emojis contextuais em todas as respostas
-- **Ambiente:** Termux com root via KernelSU + Arch Linux PRoot
+- **Ambiente:** Termux com root via KernelSU (ArchLinux não instalado)
 - **Priorização:** Python, Shell Script, Node.js para automação
 
 ### 🎯 **Protocolos de Operação**
+
 - **CO5P:** Análise, Enriquecimento, Planejamento, Verificação Web, Execução
 - **VNE:** Verbose Natural Execution com feedback claro
 - **Segurança:** Justificativa obrigatória para uso de `su` e modificações críticas
 
 ### 📚 **Arquivos de Referência**
+
 - [QWEN.md](QWEN.md) - Manifesto completo do DevSan AGI
 - [Android16.md](../Android16.md) - Análise completa do ambiente Android
 - [Gemini.md](Gemini.md) - Diretrizes para automação inteligente
@@ -662,6 +758,7 @@ cat /sys/block/sda/queue/scheduler
 ## 📍 **RASTREAMENTO DE IPs FIXOS PARA MÚLTIPLOS PCs**
 
 ### 🖥️ **PCs Registrados e IPs Fixos**
+
 Esta seção mantém um registro universal de IPs fixos para acesso de múltiplos computadores ao Termux, tornando o repositório acessível de qualquer PC autorizado.
 
 | Nome do PC | IP Fixo | Status | Última Atualização |
@@ -670,7 +767,9 @@ Esta seção mantém um registro universal de IPs fixos para acesso de múltiplo
 | DeiviPC | 192.168.25.2 | ✅ Ativo | 2025-10-10 |
 
 ### 🔧 **Como Adicionar um Novo PC**
+
 1. **Obter IP atual do Termux:**
+
    ```bash
    adb shell ip addr show wlan0 | grep "inet " | awk '{print $2}' | cut -d'/' -f1
    ```
@@ -685,12 +784,14 @@ Esta seção mantém um registro universal de IPs fixos para acesso de múltiplo
    - Testar conexão SSH
 
 ### 📋 **Instruções para Agentes**
+
 - Sempre verificar IP atual antes de conectar
 - Usar tabela acima para identificar PC correto
 - Atualizar documento quando IP mudar
 - Manter apenas PCs autorizados na lista
 
 ### ⚠️ **Considerações de Segurança**
+
 - IPs fixos devem ser de redes confiáveis
 - Chaves SSH devem ser únicas por PC
 - Remover PCs desautorizados imediatamente
@@ -705,15 +806,18 @@ Este documento fornece um mapeamento completo e inteligente do ambiente Termux, 
 **Status Final:** ✅ Totalmente funcional e documentado para agentes inteligentes.
 
 ---
+
 ## 🔥 **MODO HARDCORE TERMUX ATIVADO** 🚀
 
 ### ⚡ **Características do Modo Hardcore**
+
 - **Segurança mínima:** Usuário sabe o que faz ✅
 - **Execução plena:** Sem restrições desnecessárias ✅
 - **Root total:** KernelSU habilitado ✅
 - **Performance máxima:** Todos os núcleos ativos ✅
 
 ### 🚀 **Scripts Hardcore Disponíveis**
+
 ```bash
 # Inicialização hardcore universal
 bash termux-universal-init.sh
@@ -726,6 +830,7 @@ cat mcp-termux-universal.json
 ```
 
 ### 📊 **Status Hardcore**
+
 - **Arquivos únicos:** ✅ Mantidos e preservados
 - **Agentes coordenados:** ✅ DevSan, Qwen, Gemini ativos
 - **MCPs universais:** ✅ Todos os servidores configurados

@@ -1,0 +1,21 @@
+{
+  "name": "android-1",
+  "version": "1.0.0",
+  "description": "[![GitHub stars](https://img.shields.io/github/stars/deivisan/Android?style=social)](https://github.com/deivisan/Android/stargazers)\r [![GitHub forks](https://img.shields.io/github/forks/deivisan/Android?style=social)](https://github.com/deivisan/Android/network/members)\r [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)\r [![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com)\r [![Termux](https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=linux&logoColor=white)](https://termux.dev)\r [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)\r [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deivisan/Android.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Deivisan/Android/issues"
+  },
+  "homepage": "https://github.com/Deivisan/Android#readme"
+}
