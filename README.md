@@ -1,12 +1,14 @@
 # 🤖 Android Development Environment
 
-[![GitHub stars](https://img.shields.io/github/stars/Deivisan/Android?style=social)](https://github.com/Deivisan/Android/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Deivisan/Android?style=social)](https://github.com/Deivisan/Android/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/deivisan/Android?style=social)](https://github.com/deivisan/Android/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/deivisan/Android?style=social)](https://github.com/deivisan/Android/network/members)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com)
 [![Termux](https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=linux&logoColor=white)](https://termux.dev)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
+
+> **Ambiente de Desenvolvimento Android Avançado** - Transformando dispositivos móveis em estações de trabalho completas com IA integrada
 
 > **Ambiente de Desenvolvimento Android Avançado** - Transformando dispositivos móveis em estações de trabalho completas com IA integrada
 
@@ -288,12 +290,13 @@ adb logcat | grep -i error
 
 ### 👥 Mantenedor
 
-**Deivison Santana** - Desenvolvedor Full-Stack & Arquiteto de Soluções
+**Deivison Santana** - Técnico de Informática & Desenvolvedor Full-Stack
 
 - 📧 [deivilsantana@outlook.com](mailto:deivilsantana@outlook.com)
 - 💼 [LinkedIn](https://linkedin.com/in/deivisonlsantana)
 - 📱 [WhatsApp Business](https://wa.me/5575981231019)
 - 🌐 [Portfolio](https://deivisan.github.io)
+- 📄 [Currículo](https://deivisan.github.io/Curriculo-Deivison/)
 
 ---
 
@@ -364,6 +367,6 @@ Desenvolvido com paixão pela inovação mobile 🚀
 
 Última atualização: Outubro 2025
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/Deivisan/Android)](https://github.com/Deivisan/Android/commits/main)
-[![GitHub issues](https://img.shields.io/github/issues/Deivisan/Android)](https://github.com/Deivisan/Android/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/Deivisan/Android)](https://github.com/Deivisan/Android/pulls)
+[![GitHub last commit](https://img.shields.io/github/last-commit/deivisan/Android)](https://github.com/deivisan/Android/commits/main)
+[![GitHub issues](https://img.shields.io/github/issues/deivisan/Android)](https://github.com/deivisan/Android/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/deivisan/Android)](https://github.com/deivisan/Android/pulls)
