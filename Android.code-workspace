@@ -40,6 +40,7 @@
       "dbaeumer.vscode-eslint",
       "formulahendry.code-runner",
       "yzhang.markdown-all-in-one",
+      "davidanson.vscode-markdownlint",
       "mhutchie.git-graph",
       "EditorConfig.EditorConfig"
     ]
@@ -119,6 +120,36 @@
         "dependsOn": [
           "Build APK (Local)"
         ],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      },
+      {
+        "label": "🔄 Sync Workspace",
+        "type": "shell",
+        "command": "./Scripts/sync-workspace.sh",
+        "group": "none",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      },
+      {
+        "label": "🔌 Auto Connect",
+        "type": "shell",
+        "command": "./Scripts/auto-connect.sh",
+        "group": "none",
         "presentation": {
           "echo": true,
           "reveal": "always",
