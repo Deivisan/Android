@@ -2,9 +2,10 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const { Client } = require('ssh2');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -64,57 +65,134 @@ function fetchDeviceStats() {
 
     const conn = new Client();
     conn.on('ready', () => {
-        // Battery
-        conn.exec('dumpsys battery', (err, stream) => {
-            if (err) return;
-            let buffer = '';
-            stream.on('data', (data) => buffer += data);
-            stream.on('close', () => {
-                const level = buffer.match(/level: (\d+)/);
-                if (level) deviceStatus.battery = parseInt(level[1]);
-                io.emit('status', deviceStatus);
-            });
+        // Get Device Model
+        conn.exec('getprop ro.product.model', (err, stream) => {
+            if (!err) {
+                let buffer = '';
+                stream.on('data', (data) => buffer += data);
+                stream.on('close', () => {
+                    deviceStatus.model = buffer.trim() || 'Unknown';
+                    io.emit('status', deviceStatus);
+                });
+            }
+        });
+
+        // Battery from sysfs (native Android)
+        conn.exec('cat /sys/class/power_supply/battery/capacity', (err, stream) => {
+            if (!err) {
+                let buffer = '';
+                stream.on('data', (data) => buffer += data);
+                stream.on('close', () => {
+                    const level = parseInt(buffer.trim());
+                    if (!isNaN(level)) {
+                        deviceStatus.battery = level;
+                        io.emit('status', deviceStatus);
+                    }
+                });
+            }
+        });
+
+        // Battery Status
+        conn.exec('cat /sys/class/power_supply/battery/status', (err, stream) => {
+            if (!err) {
+                let buffer = '';
+                stream.on('data', (data) => buffer += data);
+                stream.on('close', () => {
+                    deviceStatus.batteryStatus = buffer.trim();
+                    io.emit('status', deviceStatus);
+                });
+            }
         });
 
         // RAM (free -m)
         conn.exec('free -m', (err, stream) => {
-            if (err) return;
-            let buffer = '';
-            stream.on('data', (data) => buffer += data);
-            stream.on('close', () => {
-                // Parse free -m output
-                //              total        used        free
-                // Mem:          7450        6648         801
-                const lines = buffer.split('\n');
-                if (lines.length > 1) {
-                    const parts = lines[1].trim().split(/\s+/);
-                    if (parts.length >= 3) {
-                        deviceStatus.ram = {
-                            total: parseInt(parts[1]),
-                            used: parseInt(parts[2]),
-                            free: parseInt(parts[3])
-                        };
+            if (!err) {
+                let buffer = '';
+                stream.on('data', (data) => buffer += data);
+                stream.on('close', () => {
+                    // Parse free -m output
+                    //              total        used        free
+                    // Mem:          7450        3778         178
+                    const lines = buffer.split('\n');
+                    if (lines.length > 1) {
+                        const parts = lines[1].trim().split(/\s+/);
+                        if (parts.length >= 3) {
+                            deviceStatus.ram = {
+                                total: parseInt(parts[1]),
+                                used: parseInt(parts[2]),
+                                free: parseInt(parts[3])
+                            };
+                            io.emit('status', deviceStatus);
+                        }
                     }
-                }
-                io.emit('status', deviceStatus);
-            });
+                });
+            }
+        });
+
+        // CPU Temperature (if available)
+        conn.exec('cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null || echo "N/A"', (err, stream) => {
+            if (!err) {
+                let buffer = '';
+                stream.on('data', (data) => buffer += data);
+                stream.on('close', () => {
+                    const temp = parseInt(buffer.trim());
+                    if (!isNaN(temp)) {
+                        deviceStatus.cpuTemp = Math.round(temp / 1000); // Convert from millidegrees
+                    }
+                    io.emit('status', deviceStatus);
+                });
+            }
         });
 
         conn.end();
     }).on('error', (err) => {
-        console.log('SSH Connection failed (is port 8022 forwarded?)');
+        console.log('SSH Connection failed (is port 8022 forwarded?):', err.message);
     }).connect({
         host: '127.0.0.1',
         port: 8022,
-        username: 'u0_a575', // Default Termux user
-        // We assume key-based auth is set up or we might need password
-        // For now, let's try agent or default keys
-        privateKey: fs.readFileSync('/home/deivi/.ssh/id_ed25519') // Adjust path if needed
+        username: 'u0_a575',
+        privateKey: fs.readFileSync('/home/deivi/.ssh/id_ed25519')
     });
 }
 
+// Helper function to execute SSH commands
+function executeSSHCommand(command) {
+    return new Promise((resolve, reject) => {
+        const conn = new Client();
+        conn.on('ready', () => {
+            conn.exec(command, (err, stream) => {
+                if (err) {
+                    conn.end();
+                    return reject(err);
+                }
+                let buffer = '';
+                stream.on('data', (data) => buffer += data);
+                stream.on('close', () => {
+                    conn.end();
+                    resolve(buffer);
+                });
+                stream.stderr.on('data', (data) => {
+                    console.error('SSH stderr:', data.toString());
+                });
+            });
+        }).on('error', (err) => {
+            reject(err);
+        }).connect({
+            host: '127.0.0.1',
+            port: 8022,
+            username: 'u0_a575',
+            privateKey: fs.readFileSync('/home/deivi/.ssh/id_ed25519')
+        });
+    });
+}
+
+// Check device immediately on startup
+checkDevice();
 // Poll for device every 5 seconds
 setInterval(checkDevice, 5000);
+
+// Fetch stats immediately on startup if device is already connected
+setTimeout(fetchDeviceStats, 1000);
 // Poll stats every 10 seconds if connected
 setInterval(fetchDeviceStats, 10000);
 

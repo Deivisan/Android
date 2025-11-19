@@ -30,7 +30,7 @@ function App() {
     });
 
     socket.on('photo-taken', (url) => {
-      setPhotoUrl(`http://localhost:3000${url}`);
+      setPhotoUrl(`http://localhost:3001${url}`);
     });
 
     socket.on('clipboard-content', (content) => {
@@ -59,7 +59,7 @@ function App() {
   };
 
   const toggleTorch = (state) => {
-    socket.emit('toggle-torch', state);
+    socket.emit('torch-control', state);
   };
 
   const getClipboard = () => {
