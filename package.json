@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Deivisan/Android/issues"
   },
-  "homepage": "https://github.com/Deivisan/Android#readme"
+  "homepage": "https://github.com/Deivisan/Android#readme",
+  "dependencies": {
+    "playwright": "^1.56.1"
+  }
 }
