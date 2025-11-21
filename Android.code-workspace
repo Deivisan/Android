@@ -5,7 +5,12 @@
     }
   ],
   "settings": {
-    "kiloCode.modes": ["code", "architect", "debug", "orchestrator"],
+    "kiloCode.modes": [
+      "code",
+      "architect",
+      "debug",
+      "orchestrator"
+    ],
     "windsurf.memorySync": true,
     "mcp.enabled": true,
     "editor.formatOnSave": true,
@@ -25,14 +30,19 @@
   },
   "extensions": {
     "recommendations": [
-      "ms-vscode.vscode-android",
+      "vscjava.vscode-java-pack",
+      "vscjava.vscode-gradle",
+      "adelphes.android-dev-ext",
+      "fwcd.kotlin",
+      "redhat.vscode-xml",
+      "redhat.vscode-yaml",
       "ms-python.python",
-      "ms-vscode.vscode-node-debug2",
-      "ms-vscode.vscode-git-graph",
-      "ms-vscode.vscode-json",
-      "ms-vscode.vscode-yaml",
-      "redhat.java",
-      "vscjava.vscode-gradle"
+      "dbaeumer.vscode-eslint",
+      "formulahendry.code-runner",
+      "yzhang.markdown-all-in-one",
+      "davidanson.vscode-markdownlint",
+      "mhutchie.git-graph",
+      "EditorConfig.EditorConfig"
     ]
   },
   "tasks": {
@@ -107,7 +117,39 @@
         "type": "shell",
         "command": "adb install -r app/build/outputs/apk/debug/app-debug.apk",
         "group": "build",
-        "dependsOn": ["Build APK (Local)"],
+        "dependsOn": [
+          "Build APK (Local)"
+        ],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      },
+      {
+        "label": "🔄 Sync Workspace",
+        "type": "shell",
+        "command": "./Scripts/sync-workspace.sh",
+        "group": "none",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      },
+      {
+        "label": "🔌 Auto Connect",
+        "type": "shell",
+        "command": "./Scripts/auto-connect.sh",
+        "group": "none",
         "presentation": {
           "echo": true,
           "reveal": "always",
@@ -135,7 +177,9 @@
         "type": "node",
         "request": "launch",
         "program": "${file}",
-        "skipFiles": ["<node_internals>/**"]
+        "skipFiles": [
+          "<node_internals>/**"
+        ]
       },
       {
         "name": "Debug Android App",
