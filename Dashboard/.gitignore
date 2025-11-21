@@ -1,0 +1,51 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Photos captured via dashboard
+server/public/photos/*
+!server/public/photos/.gitkeep
+
+# SSH keys (NEVER commit these!)
+*.pem
+*.key
+*_rsa
+*_ed25519
+id_*

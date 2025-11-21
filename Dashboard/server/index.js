@@ -1,3 +1,6 @@
+// Load environment variables
+require('dotenv').config();
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -6,6 +9,18 @@ const { spawn, exec } = require('child_process');
 const { Client } = require('ssh2');
 const fs = require('fs');
 const path = require('path');
+
+// Cross-platform utilities
+const {
+    getSSHConfig,
+    getServerConfig,
+    getFeatureFlags,
+    getIntervals,
+    resolveADBPath,
+    validateConfig,
+    logPlatformInfo,
+    logConfig
+} = require('./src/utils/platform');
 
 const app = express();
 app.use(cors());
@@ -147,12 +162,7 @@ function fetchDeviceStats() {
         conn.end();
     }).on('error', (err) => {
         console.log('SSH Connection failed (is port 8022 forwarded?):', err.message);
-    }).connect({
-        host: '127.0.0.1',
-        port: 8022,
-        username: 'u0_a575',
-        privateKey: fs.readFileSync('/home/deivi/.ssh/id_ed25519')
-    });
+    }).connect(getSSHConfig());
 }
 
 // Helper function to execute SSH commands
@@ -177,12 +187,7 @@ function executeSSHCommand(command) {
             });
         }).on('error', (err) => {
             reject(err);
-        }).connect({
-            host: '127.0.0.1',
-            port: 8022,
-            username: 'u0_a575',
-            privateKey: fs.readFileSync('/home/deivi/.ssh/id_ed25519')
-        });
+        }).connect(getSSHConfig());
     });
 }
 
@@ -296,6 +301,22 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3001, () => {
-    console.log('🚀 Dashboard Server running on port 3001');
+// Validate configuration before starting
+try {
+    validateConfig();
+    logPlatformInfo();
+    logConfig();
+} catch (error) {
+    console.error('❌ Configuration Error:', error.message);
+    console.error('💡 Please copy .env.example to .env and configure it for your system');
+    process.exit(1);
+}
+
+const serverConfig = getServerConfig();
+const intervals = getIntervals();
+
+server.listen(serverConfig.port, () => {
+    console.log(`🚀 Dashboard Server running on port ${serverConfig.port}`);
+    console.log(`   Environment: ${serverConfig.nodeEnv}`);
+    console.log(`   Debug Mode: ${serverConfig.debugMode ? '✅' : '❌'}`);
 });
