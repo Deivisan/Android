@@ -1,21 +1,33 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Android 16 Dashboard Server - Real-time monitoring via ADB, SSH and Termux:API",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "android",
+    "adb",
+    "termux",
+    "ssh",
+    "monitoring",
+    "dashboard"
+  ],
+  "author": "Deivison Santana",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "node-pty": "^1.0.0",
     "socket.io": "^4.8.1",
     "ssh2": "^1.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }

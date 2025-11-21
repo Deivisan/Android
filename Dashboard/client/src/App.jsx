@@ -267,6 +267,11 @@ function App() {
             <button className="action-btn">Reboot Device</button>
           </div>
         </motion.div>
+        {/* Terminal Section */}
+        <section className="terminal-section glass-panel neon-border">
+          <h2 className="panel-title text-green"><Terminal size={20} /> Terminal</h2>
+          <TerminalPanel socket={socket} />
+        </section>
       </main>
     </motion.div>
   );

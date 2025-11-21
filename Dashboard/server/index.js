@@ -1,6 +1,3 @@
-// Load environment variables
-require('dotenv').config();
-
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -10,28 +7,19 @@ const { Client } = require('ssh2');
 const fs = require('fs');
 const path = require('path');
 
-// Cross-platform utilities
-const {
-    getSSHConfig,
-    getServerConfig,
-    getFeatureFlags,
-    getIntervals,
-    resolveADBPath,
-    validateConfig,
-    logPlatformInfo,
-    logConfig
-} = require('./src/utils/platform');
-
 const app = express();
-app.use(cors());
-app.use('/photos', express.static(path.join(__dirname, 'public', 'photos')));
+app.use(cors(config.cors));
+
+// Ensure public directory exists
+const photosDir = path.join(config.server.publicDir, 'photos');
+if (!fs.existsSync(photosDir)) {
+    fs.mkdirSync(photosDir, { recursive: true });
+}
+app.use('/photos', express.static(photosDir));
 
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+    cors: config.cors
 });
 
 let deviceStatus = {
@@ -44,7 +32,7 @@ let deviceStatus = {
 
 // ADB Monitor
 function checkDevice() {
-    const adb = spawn('adb', ['devices']);
+    const adb = spawn(config.adb.path, ['devices']);
     let output = '';
 
     adb.stdout.on('data', (data) => {
@@ -77,6 +65,12 @@ function checkDevice() {
 // Fetch Stats via SSH (assuming port 8022 is forwarded)
 function fetchDeviceStats() {
     if (!deviceStatus.connected) return;
+
+    // Check if SSH is configured
+    if (!config.ssh.privateKeyPath) {
+        console.warn('⚠️  SSH not configured, skipping stats fetch');
+        return;
+    }
 
     const conn = new Client();
     conn.on('ready', () => {
@@ -161,13 +155,24 @@ function fetchDeviceStats() {
 
         conn.end();
     }).on('error', (err) => {
-        console.log('SSH Connection failed (is port 8022 forwarded?):', err.message);
-    }).connect(getSSHConfig());
+        console.error('❌ SSH Connection failed:', err.message);
+        console.error('   Make sure SSH is configured in .env and port is forwarded');
+    }).connect({
+        host: config.ssh.host,
+        port: config.ssh.port,
+        username: config.ssh.username,
+        privateKey: fs.readFileSync(config.ssh.privateKeyPath)
+    });
 }
 
 // Helper function to execute SSH commands
 function executeSSHCommand(command) {
     return new Promise((resolve, reject) => {
+        // Check if SSH is configured
+        if (!config.ssh.privateKeyPath) {
+            return reject(new Error('SSH not configured. Please set SSH_KEY_PATH in .env'));
+        }
+
         const conn = new Client();
         conn.on('ready', () => {
             conn.exec(command, (err, stream) => {
@@ -187,19 +192,24 @@ function executeSSHCommand(command) {
             });
         }).on('error', (err) => {
             reject(err);
-        }).connect(getSSHConfig());
+        }).connect({
+            host: config.ssh.host,
+            port: config.ssh.port,
+            username: config.ssh.username,
+            privateKey: fs.readFileSync(config.ssh.privateKeyPath)
+        });
     });
 }
 
 // Check device immediately on startup
 checkDevice();
-// Poll for device every 5 seconds
-setInterval(checkDevice, 5000);
+// Poll for device every configured interval
+setInterval(checkDevice, config.monitoring.deviceCheckInterval);
 
 // Fetch stats immediately on startup if device is already connected
 setTimeout(fetchDeviceStats, 1000);
-// Poll stats every 10 seconds if connected
-setInterval(fetchDeviceStats, 10000);
+// Poll stats every configured interval if connected
+setInterval(fetchDeviceStats, config.monitoring.statsFetchInterval);
 
 io.on('connection', (socket) => {
     console.log('Client connected');
@@ -301,22 +311,20 @@ io.on('connection', (socket) => {
     });
 });
 
-// Validate configuration before starting
-try {
-    validateConfig();
-    logPlatformInfo();
-    logConfig();
-} catch (error) {
-    console.error('❌ Configuration Error:', error.message);
-    console.error('💡 Please copy .env.example to .env and configure it for your system');
-    process.exit(1);
-}
-
-const serverConfig = getServerConfig();
-const intervals = getIntervals();
-
-server.listen(serverConfig.port, () => {
-    console.log(`🚀 Dashboard Server running on port ${serverConfig.port}`);
-    console.log(`   Environment: ${serverConfig.nodeEnv}`);
-    console.log(`   Debug Mode: ${serverConfig.debugMode ? '✅' : '❌'}`);
+server.listen(config.server.port, () => {
+    console.log('\n╔════════════════════════════════════════════════════════════╗');
+    console.log('║  🚀 ANDROID 16 DASHBOARD SERVER                           ║');
+    console.log('╚════════════════════════════════════════════════════════════╝\n');
+    console.log(`   🌐 Server running on: http://localhost:${config.server.port}`);
+    console.log(`   📁 Public directory: ${config.server.publicDir}`);
+    console.log(`   🔧 Environment: ${config.server.env}`);
+    console.log('\n   Configuration:');
+    console.log(`   • ADB Path: ${config.adb.path}`);
+    console.log(`   • SSH Host: ${config.ssh.host}:${config.ssh.port}`);
+    console.log(`   • SSH User: ${config.ssh.username}`);
+    console.log(`   • SSH Key: ${config.ssh.privateKeyPath ? '✅ Configured' : '❌ Not configured'}`);
+    console.log(`   • Device check: every ${config.monitoring.deviceCheckInterval}ms`);
+    console.log(`   • Stats update: every ${config.monitoring.statsFetchInterval}ms`);
+    console.log('\n   💡 Tip: Connect your Android device via ADB and forward SSH:');
+    console.log('      adb forward tcp:8022 tcp:8022\n');
 });
